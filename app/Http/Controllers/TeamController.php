@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\Team;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        $teams = Team::all();
+        return view('dashboard')
+            ->with('teams',$teams);
     }
 
     /**
@@ -24,7 +27,9 @@ class TeamController extends Controller
      */
     public function create()
     {
-        //
+        $team = new Team();
+        return view('teams.create')
+            ->with('team',$team);
     }
 
     /**
@@ -35,7 +40,15 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $team = Team::create([
+            'subject' => $request->subject,
+            'year' => $request->year,
+        ]);
+
+        session()->flash('status','Cadastrado com sucesso');
+        return to_route('teams.index');
     }
 
     /**
@@ -46,7 +59,10 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        //
+        $students = Student::all()->where('team_id',$team->id);
+        return view('teams.view')
+            ->with('team',$team)
+            ->with('students',$students);
     }
 
     /**
@@ -57,7 +73,7 @@ class TeamController extends Controller
      */
     public function edit(Team $team)
     {
-        //
+        return view('teams.edit')->with('team',$team);
     }
 
     /**
@@ -69,7 +85,11 @@ class TeamController extends Controller
      */
     public function update(Request $request, Team $team)
     {
-        //
+        $data = $request->all();
+        $team->update($data);
+
+        session()->flash('status','editado com successo');
+        return to_route('teams.index');
     }
 
     /**
@@ -80,6 +100,8 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-        //
+        $team->delete();
+        session()->flash('status','deletado com successo');
+        return to_route('teams.index');
     }
 }

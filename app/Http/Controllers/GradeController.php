@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grade;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class GradeController extends Controller
@@ -22,9 +23,13 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Student $student)
     {
-        //
+        $grade = new Grade();
+
+        return view('grades.create')
+            ->with('grade',$grade)
+            ->with('student',$student);
     }
 
     /**
@@ -33,9 +38,16 @@ class GradeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Student $student)
     {
-        //
+        Grade::create([
+            'task' => $request->task,
+            'grade' => $request->grade,
+            'student_id' => $student->id,
+        ]);
+
+        session()->flash('status','Nota cadastrada com successo');
+        return to_route('teams.show',$student->team_id);
     }
 
     /**
@@ -46,7 +58,7 @@ class GradeController extends Controller
      */
     public function show(Grade $grade)
     {
-        //
+
     }
 
     /**
@@ -57,7 +69,8 @@ class GradeController extends Controller
      */
     public function edit(Grade $grade)
     {
-        //
+        return view('grades.edit')
+            ->with('grade',$grade);
     }
 
     /**
@@ -69,7 +82,12 @@ class GradeController extends Controller
      */
     public function update(Request $request, Grade $grade)
     {
-        //
+        $data = $request->all();
+
+        $grade->update($data);
+
+        session()->flash('status','Nota atualizada com successo');
+        return to_route('students.show',$grade->student_id);
     }
 
     /**
@@ -80,6 +98,10 @@ class GradeController extends Controller
      */
     public function destroy(Grade $grade)
     {
-        //
+        $id = $grade->student_id;
+        $grade->delete();
+
+        session()->flash('status','Nota atualizada com successo');
+        return to_route('students.show',$id);
     }
 }

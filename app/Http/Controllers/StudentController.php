@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Models\Grade;
 use App\Models\Student;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -14,7 +17,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -22,9 +25,13 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request, Team $team)
     {
-        //
+        $student = New Student();
+
+        return view('students.create')
+            ->with('student',$student)
+            ->with('team',$team);
     }
 
     /**
@@ -33,9 +40,16 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Team $team)
     {
-        //
+
+        Student::create([
+            'name' => $request->name,
+            'team_id' => $team->id
+        ]);
+
+        session()->flash('status','aluno cadastrado com successo');
+        return to_route('teams.show',$team->id);
     }
 
     /**
@@ -46,7 +60,11 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $grades = Grade::all()->where('student_id',$student->id);
+
+        return view('students.show')
+            ->with('student',$student)
+            ->with('grades',$grades);
     }
 
     /**
@@ -57,7 +75,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('students.edit')->with('student',$student);
     }
 
     /**
@@ -69,7 +87,12 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $data = $request->all();
+
+        $student->update($data);
+
+        session()->flash('status','Aluno editado com successo');
+        return to_route('teams.show',$student->team_id);
     }
 
     /**
@@ -80,6 +103,9 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $id = $student->team_id;
+        $student->delete();
+        session()->flash('status','Aluno removido com sucesso');
+        return to_route('teams.show',$id);
     }
 }
