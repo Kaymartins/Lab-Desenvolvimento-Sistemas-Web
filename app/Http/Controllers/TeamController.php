@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TeamRequest;
+use App\Models\Banner;
 use App\Models\Student;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -17,8 +18,12 @@ class TeamController extends Controller
     public function index()
     {
         $teams = Team::all();
+
+        $banner = Banner::inRandomOrder()->first();
+
         return view('dashboard')
-            ->with('teams',$teams);
+            ->with('teams',$teams)
+            ->with('banner', $banner);
     }
 
     /**

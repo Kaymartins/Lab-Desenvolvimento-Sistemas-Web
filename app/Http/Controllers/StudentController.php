@@ -89,9 +89,14 @@ class StudentController extends Controller
      */
     public function update(StudentRequest $request, Student $student)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        $student->update($data);
+            $student->update($data);
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
+
 
         session()->flash('status','Aluno editado com successo');
         return to_route('teams.show',$student->team_id);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
@@ -36,6 +37,8 @@ Route::middleware(['auth','verified'])->group(function(){
    Route::get('/grades/edit/{grade}',[GradeController::class, "edit"])->name('grades.edit');
    Route::put('/grades/update/{grade}',[GradeController::class,"update"])->name('grades.update');
    Route::delete('/grades/destroy/{grade}',[GradeController::class, "destroy"])->name('grades.destroy');
+
+   Route::get('/banner',[BannerController::class,"index"]);
 });
 
 require __DIR__.'/auth.php';
