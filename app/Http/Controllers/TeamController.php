@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TeamRequest;
 use App\Models\Student;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -38,9 +39,9 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TeamRequest $teamRequest)
     {
-
+        $request = $teamRequest->validated();
 
         $team = Team::create([
             'subject' => $request->subject,
@@ -83,9 +84,9 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Team $team)
+    public function update(TeamRequest $request, Team $team)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $team->update($data);
 
         session()->flash('status','editado com successo');

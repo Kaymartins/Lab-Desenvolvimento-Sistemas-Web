@@ -9,6 +9,15 @@
                         </span>
                     </h1>
                 </div>
+
+                @if($errors->all())
+                    <div class="p-6 bg-red-400 text-xl ml-8 mr-8 mt-8">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="p-6 bg-white border-b border-gray-200 flex justify-center">
                     <form method="post" action="{{route('students.store',$team->id)}}">
                         @csrf

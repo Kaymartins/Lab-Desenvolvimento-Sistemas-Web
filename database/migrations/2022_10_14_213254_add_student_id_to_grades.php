@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('grades', function (Blueprint $table) {
             $table->unsignedBigInteger('student_id')->nullable();
-            $table->foreign('student_id')->references('id')->on('students')->nullOnDelete();
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

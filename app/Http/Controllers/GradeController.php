@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GradeRequest;
 use App\Models\Grade;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -38,11 +39,13 @@ class GradeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Student $student)
+    public function store(GradeRequest $gradeRequest, Student $student)
     {
+        $gradeRequest->validated();
+
         Grade::create([
-            'task' => $request->task,
-            'grade' => $request->grade,
+            'task' => $gradeRequest->task,
+            'grade' => $gradeRequest->grade,
             'student_id' => $student->id,
         ]);
 
@@ -80,7 +83,7 @@ class GradeController extends Controller
      * @param  \App\Models\Grade  $grade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Grade $grade)
+    public function update(GradeRequest $request, Grade $grade)
     {
         $data = $request->all();
 
