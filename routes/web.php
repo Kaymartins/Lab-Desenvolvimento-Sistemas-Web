@@ -17,12 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::middleware(['auth'])->group(function(){
 
-Route::middleware(['auth','verified'])->group(function(){
-
+    Route::get('/dashboard', [TeamController::class, "index"])->name('teams.index');
+    Route::get('/', [TeamController::class, "index"])->name('teams.index');
    Route::resource('/teams',TeamController::class);
 
    Route::get('/students/create/{team}',[StudentController::class,"create"])->name('students.create');
