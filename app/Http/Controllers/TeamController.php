@@ -49,8 +49,8 @@ class TeamController extends Controller
         $request = $teamRequest->validated();
 
         $team = Team::create([
-            'subject' => $request->subject,
-            'year' => $request->year,
+            'subject' => $teamRequest->subject,
+            'year' => $teamRequest->year,
         ]);
 
         session()->flash('status','Cadastrado com sucesso');
